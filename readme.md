@@ -8,5 +8,5 @@ After hearing about the TypeScript interpreter being ported over to Go, it made 
 - raylib-go
 
 # credits
-- [font](https://fonts.google.com/specimen/Xanh+Mono?query=xanh+mono)
+- [font](https://fonts.google.com/specimen/JetBrains+Mono)
 - [sfx](https://rpg.hamsterrepublic.com/ohrrpgce/Main_Page)
