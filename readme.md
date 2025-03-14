@@ -6,3 +6,7 @@ After hearing about the TypeScript interpreter being ported over to Go, it made 
 # requirements
 - go
 - raylib-go
+
+# credits
+- [font](https://fonts.google.com/specimen/Xanh+Mono?query=xanh+mono)
+- [sfx](https://rpg.hamsterrepublic.com/ohrrpgce/Main_Page)
