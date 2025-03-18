@@ -37,12 +37,14 @@ func newHms(seconds int) *hms {
 	return &time
 }
 
+
 func main() {
-	rl.InitWindow(screenW, screenH, "Raylib Example")
+	rl.InitWindow(screenW, screenH, "GoFocus!")
+	rl.InitAudioDevice()
 
 	defer rl.CloseWindow()
 
-	fontSize := 140
+	fontSize := 120
 	font := rl.LoadFontEx("assets/JetBrainsMono-VariableFont_wght.ttf", int32(fontSize), nil)
 
 	studyTime := STUDY_MINUTES
@@ -50,6 +52,15 @@ func main() {
 
 	studyTimerHms := newHms(studyTime)
 	breakTimerHms := newHms(breakTime)
+
+	session_begin := rl.LoadSound("assets/menu.ogg")
+	session_end := rl.LoadSound("assets/ping.ogg")
+	bonk := rl.LoadSound("assets/bonk.ogg")
+	rl.SetSoundVolume(session_begin, 0.6)
+	rl.SetSoundVolume(session_end, 0.6)
+	rl.SetSoundVolume(bonk, 0.6)
+
+	sound_played := false
 
 	studyText := fmt.Sprintf("%.2d:%.2d:%.2d", studyTimerHms.hrs, studyTimerHms.mins, studyTimerHms.secs)
 	breakText := fmt.Sprintf("%.2d:%.2d:%.2d", breakTimerHms.hrs, breakTimerHms.mins, breakTimerHms.secs)
@@ -61,7 +72,29 @@ func main() {
 
 	frames := 0
 
-	fontPosition := rl.NewVector2(100, 100)
+	studySplash := "Study time!"
+	studySplashSize := rl.MeasureTextEx(font, studySplash, float32(fontSize), 0)
+	studySplashPosition := rl.NewVector2(float32(screenW)/2 - (studySplashSize.X/2), 90)
+
+	studySplashPosition1 := studySplashPosition
+	studySplashPosition1.X += 2
+	studySplashPosition1.Y += 5
+
+	studySplashPosition2 := studySplashPosition1
+	studySplashPosition2.X += 2
+	studySplashPosition2.Y += 5
+
+	breakSplash := "Time to rest :3"
+	breakSplashSize := rl.MeasureTextEx(font, breakSplash, float32(fontSize), 0)
+	breakSplashPosition := rl.NewVector2(float32(screenW)/2 - (breakSplashSize.X/2), 90)
+
+	breakSplashPosition1 := breakSplashPosition
+	breakSplashPosition1.X += 2
+	breakSplashPosition1.Y += 5
+
+	breakSplashPosition2 := breakSplashPosition1
+	breakSplashPosition2.X += 2
+	breakSplashPosition2.Y += 5
 
 	studyTextSize := rl.MeasureTextEx(font, studyText, float32(fontSize), 0)
 	breakTextSize := rl.MeasureTextEx(font, studyText, float32(fontSize), 0)
@@ -86,18 +119,25 @@ func main() {
 
 	rl.SetTextureFilter(font.Texture, rl.TextureFilterNearest)
 
-	bgColour := rl.GetColor(0x282828ff)
-	textColour := rl.GetColor(0xfbf1c7ff)
-	textShadowColour1 := rl.GetColor(0xa89984ff)
-	textShadowColour2 := rl.GetColor(0x655c54ff)
+	bgColour 	 := rl.GetColor(0x1d2021ff)
+	textColour := rl.GetColor(0xebdbb2ff)
+	textShadowColour1 := rl.GetColor(0x504945ff)
+	textShadowColour2 := rl.GetColor(0x282828ff)
 
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
 		switch currentScreen {
 		case waitSTUDY:
+			if sound_played == false {
+				rl.PlaySound(bonk)
+				sound_played = true
+			}
+
 			if rl.IsKeyDown(rl.KeyLeftControl) && rl.IsKeyPressed(rl.KeyY) {
 				currentScreen = STUDY
+				rl.PlaySound(session_begin)
+				sound_played = false
 			}
 		case STUDY:
 			frames++
@@ -112,10 +152,13 @@ func main() {
 				studyTime = STUDY_MINUTES
 				studyTimerHms = newHms(studyTime)
 				studyText = fmt.Sprintf("%.2d:%.2d:%.2d", studyTimerHms.hrs, studyTimerHms.mins, studyTimerHms.secs)
+				rl.PlaySound(session_end)
 			}
 		case waitBREAK:
 			if rl.IsKeyDown(rl.KeyLeftControl) && rl.IsKeyPressed(rl.KeyY) {
 				currentScreen = BREAK
+				rl.PlaySound(session_begin)
+				sound_played = false
 			}
 		case BREAK:
 			frames++
@@ -135,17 +178,20 @@ func main() {
 
 		rl.BeginDrawing()
 		rl.ClearBackground(bgColour)
-		// rec := rl.NewRectangle(0, 0, float32(screenW), float32(screenH))
 
 		switch currentScreen {
 		case waitSTUDY:
-			rl.DrawTextEx(font, "Study time!", fontPosition, float32(fontSize), 0, textColour)
+			rl.DrawTextEx(font, studySplash, studySplashPosition2, float32(fontSize), 0, textShadowColour2)
+			rl.DrawTextEx(font, studySplash, studySplashPosition1, float32(fontSize), 0, textShadowColour1)
+			rl.DrawTextEx(font, studySplash, studySplashPosition, float32(fontSize), 0, textColour)
 		case STUDY:
 			rl.DrawTextEx(font, studyText, studyShadowPosition2, float32(fontSize), 0, textShadowColour2)
 			rl.DrawTextEx(font, studyText, studyShadowPosition1, float32(fontSize), 0, textShadowColour1)
 			rl.DrawTextEx(font, studyText, studyTextPosition, float32(fontSize), 0, textColour)
 		case waitBREAK:
-			rl.DrawTextEx(font, "Break time!", fontPosition, float32(fontSize), 0, textColour)
+			rl.DrawTextEx(font, breakSplash, breakSplashPosition2, float32(fontSize), 0, textShadowColour2)
+			rl.DrawTextEx(font, breakSplash, breakSplashPosition1, float32(fontSize), 0, textShadowColour1)
+			rl.DrawTextEx(font, breakSplash, breakSplashPosition, float32(fontSize), 0, textColour)
 		case BREAK:
 			rl.DrawTextEx(font, breakText, breakShadowPosition2, float32(fontSize), 0, textShadowColour2)
 			rl.DrawTextEx(font, breakText, breakShadowPosition1, float32(fontSize), 0, textShadowColour1)
