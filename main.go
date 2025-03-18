@@ -17,7 +17,7 @@ type GameState int
 const (
 	waitSTUDY GameState = iota
 	STUDY
-	waitBREAK	
+	waitBREAK
 	BREAK
 )
 
@@ -126,8 +126,8 @@ func main() {
 				breakText = fmt.Sprintf("%.2d:%.2d:%.2d", breakTimerHms.hrs, breakTimerHms.mins, breakTimerHms.secs)
 			}
 			if rl.IsKeyDown(rl.KeyLeftControl) && rl.IsKeyPressed(rl.KeyY) {
-				currentScreen = waitSTUDY 
-				breakTime = BREAK_MINUTES 
+				currentScreen = waitSTUDY
+				breakTime = BREAK_MINUTES
 				breakTimerHms = newHms(breakTime)
 				breakText = fmt.Sprintf("%.2d:%.2d:%.2d", breakTimerHms.hrs, breakTimerHms.mins, breakTimerHms.secs)
 			}
@@ -150,7 +150,7 @@ func main() {
 			rl.DrawTextEx(font, breakText, breakShadowPosition2, float32(fontSize), 0, textShadowColour2)
 			rl.DrawTextEx(font, breakText, breakShadowPosition1, float32(fontSize), 0, textShadowColour1)
 			rl.DrawTextEx(font, breakText, breakTextPosition, float32(fontSize), 0, textColour)
-		}	
+		}
 
 		rl.EndDrawing()
 	}
