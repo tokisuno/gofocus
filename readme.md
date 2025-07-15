@@ -21,6 +21,10 @@ After hearing about the TypeScript interpreter being ported over to Go, it made 
 - ``<C-a>`` :: Increment session counter +1
 - ``<C-x>`` :: Decrement session counter -1
 
+# TODO
+- [ ] Figure out how to make a GitHub release
+- [ ] Make GitHub releases for both Linux and Windows
+
 # credits
 - [font](https://fonts.google.com/specimen/JetBrains+Mono)
 - [sfx](https://rpg.hamsterrepublic.com/ohrrpgce/Main_Page)
